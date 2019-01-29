@@ -1,6 +1,6 @@
 # POKER HAND EVALUATOR
 ----------------------
-Poker Hand Evaluator is a program built in JavaScript which determines the highest ranking poker hand of two regular 5-card poker hands, which are either generated randomly or entered manually by the user.
+Poker Hand Evaluator is a program written in JavaScript which determines the highest ranking poker hand of two regular 5-card poker hands, which are either generated randomly or entered manually by the user.
 
 The program prevents a variety of user-driven errors, such as the possibility of inputting duplicate cards within the same deck, or declaring a card number or suite that does not exist (e.g. 15 of Elephants). 
 
