@@ -39,6 +39,7 @@ function drawCard(){
   return hand;
 }
 
+// This function checks for duplications in a hand
 function checkDuplicates(flop){
   let handArray = [];
   for (let card in flop){
@@ -54,6 +55,7 @@ function checkDuplicates(flop){
   return false;
 }
 
+// This function creates a hand filled with five cards (either picked or drawn depending on the value of isRandom)
 function createFlop(isRandom){
   let hand = {};
   let cards = ["First", "Second", "Third", "Fourth", "Fifth"];
@@ -131,7 +133,7 @@ function getNumberVals(orderedNumberFlop){
   return numberValueArray;
 }
 
-
+// returns an integer equal to the highest card number in a hand
 function getHighCard(sortedNumbersArray){
   let highCard = null;
   if (sortedNumbersArray[0] == 1){

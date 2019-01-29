@@ -4,7 +4,7 @@ Poker Hand Evaluator is a program built in JavaScript which determines the highe
 
 The program prevents a variety of user-driven errors, such as the possibility of inputting duplicate cards within the same deck, or declaring a card number or suite that does not exist (e.g. 15 of Elephants). 
 
-Additionally, the oddsOfHand(input) function can calculate how many randomly-generated poker hands it would take in order to achieve a specific hand. 
+Additionally, the oddsOfHand(input) function can calculate how many randomly-generated poker hands it would take in order to achieve a specific hand (i.e. royal flush, four of a kind). 
 
 ### Dependencies
 
