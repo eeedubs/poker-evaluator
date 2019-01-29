@@ -17,12 +17,12 @@ const pokerHands = [RF, SF, FourK, FH, FL, ST, ThreeK, TwoK, HC]
 function pickCard(){
   let hand = {};
   let cardNumber = Number(prompt("Pick a card number between 1 and 13. 1 for Ace, 13 for King: "));
-  while (typeof cardNumber !== "number" || cardNumber < 1 || cardNumber > 13){
+  while (typeof cardNumber !== "number" || cardNumber < 1 || cardNumber > 13 || isNaN(cardNumber)){
     cardNumber = Number(prompt("Pick a card number between 1 and 13. 1 for Ace, 13 for King: "));
   }
   hand["cardNumber"] = cardNumber;
   let cardSuite = Number(prompt("Pick a card suite. 1 for diamonds, 2 for clubs, 3 for hearts, 4 for spades: "));
-  while (typeof cardSuite !== "number" || cardSuite < 1 || cardSuite > 4){
+  while (typeof cardSuite !== "number" || cardSuite < 1 || cardSuite > 4 || isNaN(cardSuite)){
     cardSuite = Number(prompt("Pick a card suite. 1 for diamonds, 2 for clubs, 3 for hearts, 4 for spades: "));
   }
   hand["cardSuite"] = cardSuite;
