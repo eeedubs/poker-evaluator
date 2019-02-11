@@ -15,64 +15,64 @@ const pokerHands = [RF, SF, FourK, FH, FL, ST, ThreeK, TwoK, HC]
 
 // This function allows a user to enter specific cards
 function pickCard(){
-  let hand = {};
+  let cardToReturn = {};
   let cardNumber = Number(prompt("Pick a card number between 1 and 13. 1 for Ace, 13 for King: "));
   while (typeof cardNumber !== "number" || cardNumber < 1 || cardNumber > 13 || isNaN(cardNumber)){
     cardNumber = Number(prompt("Pick a card number between 1 and 13. 1 for Ace, 13 for King: "));
   }
-  hand["cardNumber"] = cardNumber;
+  cardToReturn["cardNumber"] = cardNumber;
   let cardSuite = Number(prompt("Pick a card suite. 1 for diamonds, 2 for clubs, 3 for hearts, 4 for spades: "));
   while (typeof cardSuite !== "number" || cardSuite < 1 || cardSuite > 4 || isNaN(cardSuite)){
     cardSuite = Number(prompt("Pick a card suite. 1 for diamonds, 2 for clubs, 3 for hearts, 4 for spades: "));
   }
-  hand["cardSuite"] = cardSuite;
-  return hand;
+  cardToReturn["cardSuite"] = cardSuite;
+  return cardToReturn;
 }
 
 // This function draws a card at random
 function drawCard(){
-  let hand = {};
+  let cardToReturn = {};
   let suiteNumber = Math.floor(Math.random() * 4) + 1;
   let cardNumber = Math.floor(Math.random() * 13) + 1;
-  hand["cardNumber"] = cardNumber;
-  hand["cardSuite"] = suiteNumber;
-  return hand;
+  cardToReturn["cardNumber"] = cardNumber;
+  cardToReturn["cardSuite"] = suiteNumber;
+  return cardToReturn;
 }
 
-// This function checks for duplications in a hand
+// This function checks for duplications in a hand by pushing the cardNumber and cardSuite into an 
+// array in the format of [12 4, 3 2, 1 4, 10 3, etc...]
 function checkDuplicates(flop){
-  let handArray = [];
+  let duplicateObject = {};
   for (let card in flop){
-    handArray.push(`${flop[card].cardNumber} ${flop[card].cardSuite}`)
-  }
-  for (let card in flop){
-    if (handArray[`${flop[card].cardNumber} ${flop[card].cardSuite}`]){
+    if (duplicateObject[`${flop[card].cardNumber} ${flop[card].cardSuite}`]){
       return true;
     } else {
-      handArray[flop[card].cardNumber + " " + flop[card].cardSuite] = 1;
+      duplicateObject[`${flop[card].cardNumber} ${flop[card].cardSuite}`] = 1;
     }
   }
   return false;
 }
 
 // This function creates a hand filled with five cards (either picked or drawn depending on the value of isRandom)
+// If the selection is random, 
 function createFlop(isRandom){
   let hand = {};
   let cards = ["First", "Second", "Third", "Fourth", "Fifth"];
-  for (let order in cards){
+  for (let eachCard in cards){
     if (isRandom){
-      hand[cards[order]] = drawCard();
+      hand[cards[eachCard]] = drawCard();
     } else {
-      console.log(cards[order] + " card: ");
-      hand[cards[order]] = pickCard();
+      console.log(cards[eachCard] + " card: ");
+      hand[cards[eachCard]] = pickCard();
     }
-    while (checkDuplicates(hand)){
+    while (checkDuplicates(hand) === true){
       if (isRandom){
-        hand[cards[order]] = drawCard();
+        // console.log("Duplicate detected. Redealing the card.")
+        hand[cards[eachCard]] = drawCard();
       } else {
         console.log("Duplicate detected. Redealing the card.")
-        console.log(cards[order] + " card: ");
-        hand[cards[order]] = pickCard();
+        console.log(cards[eachCard] + " card: ");
+        hand[cards[eachCard]] = pickCard();
       }
     }
   }
@@ -559,12 +559,12 @@ function runComparison(isRandom){
   console.log(`Winning result is ${winner[1]} with ${winner[2]}`);  
 }
 
-runComparison(true);
+// runComparison(true);
 // runComparison(false);
 // oddsOfHand(RF);
 // oddsOfHand(SF);
 // oddsOfHand(FourK);
-// oddsOfHand(FH);
+oddsOfHand(FH);
 // oddsOfHand(FL);
 // oddsOfHand(ST);
 // oddsOfHand(ThreeK);
