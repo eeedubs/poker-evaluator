@@ -18,8 +18,38 @@ const pokerHands = [RF, SF, FourK, FH, FL, ST, ThreeK, TwoK, HC]
 
 class Game {
   constructor() {
+    this.deck = [];
+    this.hands = [];
+  }
+  
+  deal(numberOfPlayers){
     this.deck = new Deck(cards);
-    this.hand = new Hand(this.deck);
+    this._dealCards(numberOfPlayers);
+    this._dealRiver();
+  }
+
+  _dealCards(numberOfPlayers){
+    // Create a hand for each player in the game.
+    for (let x = 0; x < numberOfPlayers; x++){
+      this.hands.push(new Hand(this.deck, 2));
+    }
+
+    // Deal a card to each player, in sequence, twice.
+    for (let round = 0; round < 2; round++){
+      for (let turn = 0; turn < numberOfPlayers; turn++){
+        let newCard = new Card;
+        newCard.drawRandom(this.deck);
+        this.hands[turn].cards[round] = newCard;
+      }
+    }
+  }
+
+  _dealRiver(){
+    // Deal the river and burn cards
+    this.river = new River(this.deck);
+    for (let hand of this.hands){
+      hand.setRiver(this.river);
+    }
   }
 }
 
@@ -36,11 +66,31 @@ class Deck {
       let number = parsedLine["Number"];
       let suite = parsedLine["Suite"];
       let newCard = new Card();
-      newCard.assignNumber(number);
-      newCard.assignSuite(suite);
+      newCard.setValues(number, suite);
       deck.push(newCard);
     }
     return deck;
+  }
+}
+
+class River {
+  constructor(deck) {
+    [this.cards, this.burnPile] = this._dealDeck(deck);
+  }
+
+  _dealDeck(deck) {
+    let cards = [];
+    let burnPile = [];
+    for (let i = 0; i < 8; i++){
+      let newCard = new Card();
+      newCard.drawRandom(deck);
+      if ([0, 4, 6].includes(i)){
+        burnPile.push(newCard);
+      } else {
+        cards.push(newCard);
+      }
+    }
+    return [cards, burnPile];
   }
 }
 
@@ -48,12 +98,9 @@ class Card {
   constructor() {
   }
 
-  assignSuite(suite) {
-    this.suite = suite;
-  }
-
-  assignNumber(number) {
+  setValues(number, suite) {
     this.number = number;
+    this.suite = suite;
   }
   
   drawRandom(deck) {
@@ -65,396 +112,168 @@ class Card {
 }
 
 class Hand {
-  constructor(deck) {
-    this.cards = [];
-    for (let i = 0; i < 5; i++){
-      let newCard = new Card();
-      newCard.drawRandom(deck);
-      this.cards.push(newCard);
-    }
-    this.numbers = this.cards.map((card) => { return card.number }).sort((a, b) => { return a - b });
-    this.suites = this.cards.map((card) => { return card.suite }).sort();
+  constructor(deck, length) {
+    this.cards = new Array(length); // the 2 cards in-hand
+    this.river = []; // the 5-card flop
+    this.combo = []; // the 7-card combo (cards + river)
+    this.deck = deck; // the 52 cards
+  }
+
+  get cardNumbers(){
+    return this.combo.map((card) => { return card.number }).sort((a, b) => { return a - b });
+  }
+
+  get cardSuites() {
+    return this.combo.map((card) => { return card.suite }).sort();
   }
 
   get highCard() {
-    return this.numbers[4]
+    return this.cardNumbers[6]
   }
 
   get highCardSuite() {
-    let highCardIndex = this.cards.map((val, i) => { return val.number }).indexOf(this.highCard);
-    return this.cards[highCardIndex].suite
+    let highCardIndex = this.combo.map((val, i) => { return val.number }).indexOf(this.highCard);
+    return this.combo[highCardIndex].suite
   }
 
-  isRoyalFlush() {
-    if (!this.isStraightFlush()) { return false };
-    return (this.numbers[0] === 1);
+  get straightHighCard(){
+    if (!this.hasStraight){ return };
+    let isAceHighStraight = [1, 10, 11, 12, 13].every((val, i, arr) => { return this.cardNumbers.includes(val) });
+    if (isAceHighStraight){ return 1 };
+
+    let straightHighCard;
+    for (let i = 0; i < this.cardNumbers.length; i++){
+      let straightSequence = JSON.stringify([this.cardNumbers[i], this.cardNumbers[i] + 1, this.cardNumbers[i] + 2, this.cardNumbers[i] + 3, this.cardNumbers[i] + 4])
+      let fiveCardSequence = JSON.stringify([this.cardNumbers[i], this.cardNumbers[i+1], this.cardNumbers[i+2], this.cardNumbers[i+3], this.cardNumbers[i+4]]);
+      if (straightSequence === fiveCardSequence && this.cardNumbers[i] !== 1){
+        straightHighCard = this.cardNumbers[i+4];
+      }
+    }
+    return straightHighCard;
   }
 
-  isStraightFlush() {
-    return (this.isStraight() && this.isFlush())
+  get flushSuite(){
+    if (!this.hasFlush){ return }
+    for (let suite of this.cardSuites){
+      let occurrences = this.cardSuites.filter((val, i, arr) => { return arr[i] === suite }).length;
+      if (occurrences >= 5){
+        return suite
+      }
+    }
   }
 
-  isFourOfAKind() {
-    let highKicker = this.numbers.slice(0, 4).every((val, i, arr) => { return val === arr[0]})
-    let lowKicker = this.numbers.slice(1, 5).every((val, i, arr) => { return val === arr[1]})
-    return (highKicker || lowKicker);
+  setRiver(river){ 
+    this.river = river;
+    this._setCombo(this.river.cards, this.cards);
   }
 
-  isFullHouse() {
-    if (!this.isTrips()) { return false };
-    let tripsHighTrips = this.numbers.slice(2, 5).every((val, i, arr) => { return val === arr[2]});
-    let tripsHighPair = this.numbers.slice(0, 2).every((val, i, arr) => { return val === arr[0]});
-    let tripsLowTrips = this.numbers.slice(3, 5).every((val, i, arr) => { return val === arr[3]});
-    let tripsLowPair = this.numbers.slice(0, 3).every((val, i, arr) => { return val === arr[0]});
-    let isTripsHighFullHouse = (tripsHighTrips && tripsHighPair);
-    let isTripsLowFullHouse = (tripsLowTrips && tripsLowPair);
-    return (isTripsHighFullHouse || isTripsLowFullHouse);
+  _setCombo(riverCards, cards){
+    this.combo = riverCards.concat(cards);
   }
 
-  isFlush() {
-    return (this.suites[0] === this.suites[4]);
+  hasRoyalFlush() {
+    if (!this.hasStraightFlush()) { return false };
+    return (this.straightHighCard === 1);
   }
 
-  isStraight() {
-    let normalStraight = JSON.stringify([this.numbers[0], this.numbers[0] + 1, this.numbers[0] + 2, this.numbers[0] + 3, this.numbers[0] + 4])
-    let aceHighStraight = JSON.stringify([1, 10, 11, 12, 13])
-    let isNormalStraight = (normalStraight.includes(JSON.stringify(this.numbers)) && this.numbers[0] !== 1);
-    let isAceHighStraight = (aceHighStraight.includes(JSON.stringify(this.numbers)))
-    return (isNormalStraight || isAceHighStraight);
+  hasStraightFlush() {
+    if (!(this.hasStraight() && this.hasFlush())){ return false };
+    let highCard = this.straightHighCard;
+    let flushSuite = this.flushSuite;
+    let straightCards = (highCard === 1) ? [1, 10, 11, 12, 13] : [highCard - 4, highCard - 3, highCard - 2, highCard - 1, highCard];
+    let comboStraightCards = this.combo.filter((val) => { return (straightCards.includes(val.number) && val.suite == flushSuite) });
+    return (comboStraightCards.length === 5)
   }
 
-  isTrips() {
-    let lowTrips = this.numbers.slice(0, 3).every((val, i, arr) => { return val === arr[0] });
-    let midTrips = this.numbers.slice(1, 4).every((val, i, arr) => { return val === arr[1] });
-    let highTrips = this.numbers.slice(2, 5).every((val, i, arr) => { return val === arr[2] });
-    return (lowTrips || midTrips || highTrips);
+  hasFourOfAKind() {
+    for (let number of this.cardNumbers){
+      let occurrences = this.cardNumbers.filter((val, i, arr) => { return arr[i] === number }).length;
+      if (occurrences === 4){
+        return true;
+      }
+    }
+    return false;
   }
 
-  isTwoPair() {
+  hasFullHouse() {
+    if (!this.hasTrips()) { return false };
+    let pair = [], trips = [];
+    for (let number of this.cardNumbers){
+      let occurrences = this.cardNumbers.filter((val, i, arr) => { return arr[i] === number }).length;
+      // Possibilities: [trips, trips], [trips, pair], [quads, trips], [quads, pair]
+      if (occurrences >= 3 && !trips.includes(number)){
+        trips.push(number);
+      }
+      if (occurrences === 2 && !pair.includes(number)){
+        pair.push(number);
+      }
+      let isFullHouse = ((trips.length === 2) || (trips.length === 1 && pair.length >= 1)) 
+      if (isFullHouse){ return true };
+    }
+    return false;
+  }
+
+  hasFlush() {
+    for (let suite of this.cardSuites){
+      let occurrences = this.cardSuites.filter((val, i, arr) => { return arr[i] === suite }).length;
+      if (occurrences >= 5){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  hasStraight() {
+    let isAceHighStraight = [1, 10, 11, 12, 13].every((val, i, arr) => { return this.cardNumbers.includes(val) });
+    if (isAceHighStraight){ return true };
+    for (let n of this.cardNumbers){
+      if (isNaN(this.cardNumbers[n+5])){ return false };
+      let straightSequence = JSON.stringify([this.cardNumbers[n], this.cardNumbers[n] + 1, this.cardNumbers[n] + 2, this.cardNumbers[n] + 3, this.cardNumbers[n] + 4])
+      let fiveCardSequence = JSON.stringify([this.cardNumbers[n], this.cardNumbers[n+1], this.cardNumbers[n+2], this.cardNumbers[n+3], this.cardNumbers[n+4]]);
+      if (straightSequence === fiveCardSequence && this.cardNumbers[n] !== 1){ return true };
+    }
+  }
+
+  hasTrips() {
+    for (let number of this.cardNumbers){
+      let occurrences = this.cardNumbers.filter((val, i, arr) => { return arr[i] === number }).length;
+      if (occurrences >= 3){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  hasTwoPair() {
     let pairs = [];
-    for (let number of this.numbers) {
-      let occurrences = this.numbers.filter((val, i, arr) => { return arr[i] === number }).length;
+    for (let number of this.cardNumbers) {
+      let occurrences = this.cardNumbers.filter((val, i, arr) => { return arr[i] === number }).length;
       if (occurrences === 2 && !pairs.includes(number)){
         pairs.push(number)
       }
     }
-    return (pairs.length === 2);
+    return (pairs.length >= 2);
   }
 
-  isPair() {
+  hasPair() {
     let pairs = [];
-    for (let number of this.numbers) {
-      let occurrences = this.numbers.filter((val, i, arr) => { return arr[i] === number }).length;
+    for (let number of this.cardNumbers) {
+      let occurrences = this.cardNumbers.filter((val, i, arr) => { return arr[i] === number }).length;
       if (occurrences === 2 && !pairs.includes(number)){
         pairs.push(number)
       }
     }
-    return (pairs.length === 1);
+    return (pairs.length >= 1);
   }
 }
 
 let game = new Game();
-while (!game.hand.isPair()){
-  game = new Game();
+game.deal(1);
+let x = 0;
+while (!game.hands[0].hasRoyalFlush()){
+  x++;
+  game = new Game()
+  game.deal(1);
 }
-console.log(game.hand);
-
-// returns an object of the occurrences of each number value
-function occurrencesOfNumber(flop){
-  let orderedFlop = sortByCardNumber(flop);
-  let values = {};
-  Object.keys(orderedFlop).map(function(card, index){
-    if (values[orderedFlop[card].cardNumber]){
-      values[orderedFlop[card].cardNumber] = values[orderedFlop[card].cardNumber] + 1;
-    } else {
-      values[orderedFlop[card].cardNumber] = 1;
-    }
-  });
-  return values;
-}
-
-// returns an integer equal to the highest card's suite
-function getHighSuiteByCardNumber(flop, cardInput){
-  let highCardSuite = 0;
-  Object.keys(flop).map(function(card, index){
-    // for each card in the flop
-    if (flop[card].cardNumber == cardInput){
-      // if the card number matches the cardInput
-      if (Number(flop[card].cardSuite) > highCardSuite){
-        //  if the card number's suite is higher than the previous suite
-        highCardSuite = Number(flop[card].cardSuite);
-      }
-    }
-  })
-  return highCardSuite;
-}
-
-// Sorts a hand object into [ PokerHand, highCard, highSuite, lowCard/null, lowSuite/null ]
-function evaluateFlop(flop){
-  if (isRoyalFlush(flop)[0]){
-    return ["RF", isRoyalFlush(flop)[1], isRoyalFlush(flop)[2], null, null];
-  } else if (isStraightFlush(flop)[0]){
-    return ["SF", isStraightFlush(flop)[1], isStraightFlush(flop)[2], null, null];
-  } else if (isPair(flop, 4)[0]){
-    return ["4K", isPair(flop, 4)[1], isPair(flop, 4)[2], null, null];
-  } else if (isFullHouse(flop)[0]){
-    return ["FH", isFullHouse(flop)[1], isFullHouse(flop)[2], isFullHouse(flop)[3], isFullHouse(flop)[4]];
-  } else if (isFlush(flop)[0]){
-    return ["FL", isFlush(flop)[1], isFlush(flop)[2], null, null];
-  } else if (isStraight(flop)[0]){
-    return ["ST", isStraight(flop)[1], isStraight(flop)[2], null, null];
-  } else if (isPair(flop, 3)[0]){
-    return ["3K", isPair(flop, 3)[1], isPair(flop, 3)[2], null, null];
-  } else if (isPair(flop, 2)[0]){
-    return ["2K", isPair(flop, 2)[1], isPair(flop, 2)[2], null, null];
-  } else {
-    let values = sortByCardNumber(flop);
-    let array = getNumberVals(values);
-    let highCard = getHighCard(array);
-    let highSuite = getHighSuiteByCardNumber(flop, highCard);
-    return ["HC", highCard, highSuite, null, null]
-  }
-}
-
-// Sorts RFs, SFs, FHs, FLs, and STs
-function compareHands(hand1, hand2, condition){
-  let result = [false, null, null];
-  // if condition matches
-  if (hand1[0] == condition && hand2[0] == condition){
-    // if highCard matches
-    if (hand1[1] == hand2[1]){
-      // if highSuite matches
-      if (hand1[2] == hand2[2]){
-        // Royal Flush tie
-        if (condition == RF){
-          results = [true, "Tie", condition];
-          // if lowCard matches
-        } else if (hand1[3] == hand2[3]){
-          // if lowSuite matches
-          if (hand1[4] == hand2[4]){
-            result = [true, "a tie", condition];
-          } else if (hand1[4] > hand2[4]){
-            result = [true, "Hand1", condition];
-          } else {
-            result = [true, "Hand2", condition];
-          }
-        } else if (hand1[3] > hand2[3]){
-          result = [true, "Hand1", condition];
-        } else {
-          result = [true, "Hand2", condition];
-        }
-      } else if (hand1[2] > hand2[2]){
-        result = [true, "Hand1", condition];
-      } else {
-        result = [true, "Hand2", condition];
-      }
-    } else if (hand1[1] == 1 && hand2[1] !== 1){
-      result = [true, "Hand1", condition];
-    } else if (hand2[1] == 1 && hand1[1] !== 1){
-      result = [true, "Hand2", condition];
-    } else if (hand1[1] > hand2[1]){
-      result = [true, "Hand1", condition];
-    } else {
-      result = [true, "Hand2", condition];
-    }
-  } else if (hand1[0] == condition){
-    result = [true, "Hand1", condition];
-  } else if (hand2[0] == condition){
-    result = [true, "Hand2", condition];
-  }
-  return result;
-}
-
-// Sorts 4Ks, 3Ks and 2Ks
-function comparePairs(hand1, hand2, flop1, flop2, condition){
-  let result = [false, null, null]
-  let firstNumberOrder = sortByCardNumber(flop1)
-  let firstSuiteOrder = sortBySuiteNumber(flop1)
-  let secondNumberOrder = sortByCardNumber(flop2)
-  let secondSuiteOrder = sortBySuiteNumber(flop2)
-  let firstNumberArray = getNumberVals(firstNumberOrder);
-  let firstSuiteArray = getSuiteVals(firstSuiteOrder);
-  let secondNumberArray = getNumberVals(secondNumberOrder);
-  let secondSuiteArray = getSuiteVals(secondSuiteOrder);
-  // if both hands meet the condition
-  if (hand1[0] == condition && hand2[0] == condition){
-    // if pair number is equal
-    if (hand1[1] == hand2[1]){
-      // if pair suite is equal
-      if (hand1[2] == hand2[2]){    
-        for (let x = 4; x > -1; x--){
-          if (firstNumberArray[x] == secondNumberArray[x]){
-            if (x === 0 && firstSuiteArray[x] == secondSuiteArray[x]){
-              result = [true, "a tie", condition];
-            } else if (x !== 0 && firstSuiteArray[x] == secondSuiteArray[x]){
-              continue
-            } else if (firstSuiteArray[x] > secondSuiteArray[x]){
-              result = [true, "Hand1", condition];
-            } else {
-              result = [true, "Hand2", condition];
-            }
-          } else if (firstNumberArray[x] == 1 && secondNumberArray[x] !== 1){
-            result = [true, "Hand1", condition];
-          } else if (secondNumberArray[x] == 1 && firstNumberArray[x] !== 1){
-            result = [true, "Hand2", condition];
-          } else if (firstNumberArray[x] > secondNumberArray[x]){
-            result = [true, "Hand1", condition];
-          } else {
-            result = [true, "Hand2", condition];
-          }
-        }
-        // else if suite is greater than
-      } else if (hand1[2] > hand2[2]){
-        result = [true, "Hand1", condition];
-      } else {
-        result = [true, "Hand2", condition];
-      }
-      // else if number is greater than
-    } else if (hand1[1] == 1 && hand2[1] !== 1){
-      result = [true, "Hand1", condition];
-    } else if (hand2[1] == 1 && hand1[1] !== 1){
-      result = [true, "Hand2", condition];
-    } else if (hand1[1] > hand2[1]){
-      result = [true, "Hand1", condition];
-    } else {
-      result = [true, "Hand2", condition];
-    }
-  } else if (hand1[0] == condition){
-    result = [true, "Hand1", condition];
-  } else if (hand2[0] == condition){
-    result = [true, "Hand2", condition];
-  }
-  return result;
-}
-
-// Sorts HCs
-function compareHighCard(flop1, flop2){
-  let result = [false, null, null]
-  let firstNumberOrder = sortByCardNumber(flop1)
-  let firstSuiteOrder = sortBySuiteNumber(flop1)
-  let secondNumberOrder = sortByCardNumber(flop2)
-  let secondSuiteOrder = sortBySuiteNumber(flop2)
-  let firstNumberArray = getNumberVals(firstNumberOrder);
-  let firstSuiteArray = getSuiteVals(firstSuiteOrder);
-  let secondNumberArray = getNumberVals(secondNumberOrder);
-  let secondSuiteArray = getSuiteVals(secondSuiteOrder);
-  if (firstNumberArray[0] == 1 && secondNumberArray[0] == 1){
-    if (firstSuiteArray[0] > secondSuiteArray[0]){
-      result = [true, "Hand1", HC];
-    } else if (secondSuiteArray[0] > firstSuiteArray[0]){
-      result = [true, "Hand2", HC];
-    }
-  } else if (firstNumberArray[0] == 1 && secondNumberArray[0] !== 1){
-    result = [true, "Hand1", HC];
-  } else if (secondNumberArray[0] == 1 && firstNumberArray[0] !== 1){
-    result = [true, "Hand2", HC];
-  } else {
-    for (let x = 4; x > -1; x--){
-      if (firstNumberArray[x] == secondNumberArray[x]){
-        if (x === 0 && firstSuiteArray[x] == secondSuiteArray[x]){
-          result = [true, "a tie", HC];
-        } else if (x !== 0 && firstSuiteArray[x] == secondSuiteArray[x]){
-          continue;
-        } else if (firstSuiteArray[x] > secondSuiteArray[x]){
-          result = [true, "Hand1", HC];
-        } else {
-          result = [true, "Hand2", HC];
-        }
-      } else if (firstNumberArray[x] > secondNumberArray[x]){
-        result = [true, "Hand1", HC];
-      } else {
-        result = [true, "Hand2", HC];
-      }
-    }
-  }
-  return result;
-}
-
-// Runs the hands and flops through the different tests to determine the winner
-function determineWinner(handResult1, handResult2, flop1, flop2){
-  console.log("Flop1 \n ", flop1, "\n\nFlop2 \n", flop2, "\n");
-  console.log("Hand1 \n ", handResult1, "\nHand2 \n", handResult2, "\n");
-  let found = null;
-  for (let hand of pokerHands){
-    if (hand == HC){
-      found = compareHighCard(flop1, flop2)
-      return found;
-    } else if (hand == FourK || hand == ThreeK || hand == TwoK){
-      found = comparePairs(handResult1, handResult2, flop1, flop2, hand)
-      if (found[0] == true){
-        return found;
-      }
-    } else {
-      found = compareHands(handResult1, handResult2, hand)
-      if (found[0] == true){
-        return found;
-      }
-    }
-  }
-}
-
-// Tests for matching poker hands abbreviations (no pairs)
-function oddsOfHand(phInput){
-  let flop = createFlop(true);
-  let ph = phInput;
-  let count = 1;
-  while (!_.contains(pokerHands, ph)){
-    ph = prompt("Please enter a valid poker hand abbreviation (RF, SF, FourK, FH, FL, ST, ThreeK, TwoK or HC): ");
-  }
-  while(evaluateFlop(flop)[0] !== ph){
-    count++;
-    flop = createFlop(true);
-  }
-  console.log(flop);
-  console.log(evaluateFlop(flop));
-  console.log("Decks dealt: ", count);
-}
-
-// Repeatedly creates a new flop until a specified pokerhand is matched (no pairs)
-// Returns an object with the matching poker hand
-function repeatUntil(phInput){
-  let flop = createFlop(true);
-  let ph = phInput;
-  while (!_.contains(pokerHands, ph)){
-    ph = prompt("Please enter a valid poker hand abbreviation (RF, SF, FourK, FH, FL, ST, ThreeK, TwoK or HC): ");
-  }
-  while(evaluateFlop(flop)[0] !== ph){
-    flop = createFlop(true);
-  }
-  return flop;
-}
-
-function runComparison(isRandom){
-  let flop1, flop2, hand1, hand2, winner;
-  if (!isRandom){
-    console.log(`Flop 1 \n${line}`)
-    flop1 = createFlop(false);
-    console.log(`\nFlop 2 \n${line}`)
-    flop2 = createFlop(false);
-    hand1 = evaluateFlop(flop1);
-    hand2 = evaluateFlop(flop2);
-  } else {
-    flop1 = createFlop(true);
-    flop2 = createFlop(true);
-    // flop1 = repeatUntil(FL);
-    // flop2 = repeatUntil(SF);
-    hand1 = evaluateFlop(flop1);
-    hand2 = evaluateFlop(flop2);
-  }
-  winner = determineWinner(hand1, hand2, flop1, flop2);
-  console.log(`Winning result is ${winner[1]} with ${winner[2]}`);  
-}
-
-// runComparison(true);
-// runComparison(false);
-// oddsOfHand(RF);
-// oddsOfHand(SF);
-// oddsOfHand(FourK);
-// oddsOfHand(FH);
-// oddsOfHand(FL);
-// oddsOfHand(ST);
-// oddsOfHand(ThreeK);
-// oddsOfHand(TwoK);
-// oddsOfHand(HC);
-
-
+console.log(game.hands[0].combo);
+console.log(x);
