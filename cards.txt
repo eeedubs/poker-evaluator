@@ -1,0 +1,208 @@
+{
+  "Suite": "Diamonds", 
+  "Number": 1
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 2
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 3
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 4
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 5
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 6
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 7
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 8
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 9
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 10
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 11
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 12
+},
+{
+  "Suite": "Diamonds", 
+  "Number": 13
+},
+{
+  "Suite": "Hearts", 
+  "Number": 1
+},
+{
+  "Suite": "Hearts", 
+  "Number": 2
+},
+{
+  "Suite": "Hearts", 
+  "Number": 3
+},
+{
+  "Suite": "Hearts", 
+  "Number": 4
+},
+{
+  "Suite": "Hearts", 
+  "Number": 5
+},
+{
+  "Suite": "Hearts", 
+  "Number": 6
+},
+{
+  "Suite": "Hearts", 
+  "Number": 7
+},
+{
+  "Suite": "Hearts", 
+  "Number": 8
+},
+{
+  "Suite": "Hearts", 
+  "Number": 9
+},
+{
+  "Suite": "Hearts", 
+  "Number": 10
+},
+{
+  "Suite": "Hearts", 
+  "Number": 11
+},
+{
+  "Suite": "Hearts", 
+  "Number": 12
+},
+{
+  "Suite": "Hearts", 
+  "Number": 13
+},
+{
+  "Suite": "Clubs", 
+  "Number": 1
+},
+{
+  "Suite": "Clubs", 
+  "Number": 2
+},
+{
+  "Suite": "Clubs", 
+  "Number": 3
+},
+{
+  "Suite": "Clubs", 
+  "Number": 4
+},
+{
+  "Suite": "Clubs", 
+  "Number": 5
+},
+{
+  "Suite": "Clubs", 
+  "Number": 6
+},
+{
+  "Suite": "Clubs", 
+  "Number": 7
+},
+{
+  "Suite": "Clubs", 
+  "Number": 8
+},
+{
+  "Suite": "Clubs", 
+  "Number": 9
+},
+{
+  "Suite": "Clubs", 
+  "Number": 10
+},
+{
+  "Suite": "Clubs", 
+  "Number": 11
+},
+{
+  "Suite": "Clubs", 
+  "Number": 12
+},
+{
+  "Suite": "Clubs", 
+  "Number": 13
+},
+{
+  "Suite": "Spades", 
+  "Number": 1
+},
+{
+  "Suite": "Spades", 
+  "Number": 2
+},
+{
+  "Suite": "Spades", 
+  "Number": 3
+},
+{
+  "Suite": "Spades", 
+  "Number": 4
+},
+{
+  "Suite": "Spades", 
+  "Number": 5
+},
+{
+  "Suite": "Spades", 
+  "Number": 6
+},
+{
+  "Suite": "Spades", 
+  "Number": 7
+},
+{
+  "Suite": "Spades", 
+  "Number": 8
+},
+{
+  "Suite": "Spades", 
+  "Number": 9
+},
+{
+  "Suite": "Spades", 
+  "Number": 10
+},
+{
+  "Suite": "Spades", 
+  "Number": 11
+},
+{
+  "Suite": "Spades", 
+  "Number": 12
+},
+{
+  "Suite": "Spades", 
+  "Number": 13
+}
