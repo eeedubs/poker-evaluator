@@ -1,4 +1,4 @@
-const Card = require('../card/index');
+const Card = require('./card');
 
 module.exports = class River {
   constructor(deck) {

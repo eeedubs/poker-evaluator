@@ -1,4 +1,4 @@
-const Card = require('../card/index.js');
+const Card = require('./card');
 
 module.exports = class Deck {
   constructor(source) {
@@ -12,8 +12,7 @@ module.exports = class Deck {
       let parsedLine = JSON.parse(line);
       let number = parsedLine["Number"];
       let suite = parsedLine["Suite"];
-      let newCard = new Card();
-      newCard.setValues(number, suite);
+      let newCard = new Card(number, suite);
       deck.push(newCard);
     }
     return deck;

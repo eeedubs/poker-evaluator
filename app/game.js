@@ -1,9 +1,9 @@
 const fs = require('fs');
-const cardFile = fs.readFileSync('game/cards.txt', 'utf8')
-const River = require('./river/index');
-const Hand = require('./hand/index');
-const Deck = require('./deck/index');
-const Card = require('./card/index');
+const cardFile = fs.readFileSync('app/assets/cards.txt', 'utf8')
+const River = require('./river');
+const Hand = require('./hand');
+const Deck = require('./deck');
+const Card = require('./card');
 
 module.exports = class Game {
   constructor() {

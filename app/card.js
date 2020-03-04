@@ -1,10 +1,5 @@
 module.exports = class Card {
-  constructor() {
-    this.number = null;
-    this.suite = null;
-  }
-
-  setValues(number, suite) {
+  constructor(number = null, suite = null) {
     this.number = number;
     this.suite = suite;
   }
