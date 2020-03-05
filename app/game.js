@@ -1,5 +1,3 @@
-const fs = require('fs');
-const cardFile = fs.readFileSync('app/assets/cards.txt', 'utf8')
 const River = require('./river');
 const Hand = require('./hand');
 const Deck = require('./deck');
@@ -7,10 +5,10 @@ const Card = require('./card');
 
 module.exports = class Game {
   constructor() {
-    this.deck = [];
+    this.deck = new Deck();
     this.hands = [];
   }
-  
+
   play(numberOfPlayers){
     this._deal(numberOfPlayers);
     this.hands.forEach((hand) => {
@@ -20,7 +18,6 @@ module.exports = class Game {
   }
 
   _deal(numberOfPlayers){
-    this.deck = new Deck(cardFile);
     this._dealCards(numberOfPlayers);
     this._dealRiver();
   }
@@ -28,7 +25,7 @@ module.exports = class Game {
   _dealCards(numberOfPlayers){
     // Create a hand for each player in the game.
     for (let x = 0; x < numberOfPlayers; x++){
-      this.hands.push(new Hand(this.deck, 2));
+      this.hands.push(new Hand(this.deck));
     }
 
     // Deal a card to each player, in sequence, twice.

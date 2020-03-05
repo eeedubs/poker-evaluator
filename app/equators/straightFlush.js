@@ -1,6 +1,5 @@
 const { getStraightHighCard, getFlushSuite } = require('./helpers/index');
-const equateStraight = require('./straight.js');
-const equateFlush = require('./flush.js');
+const { equateStraight, equateFlush } = require('./index');
 
 module.exports = ((combo, cardNumbers, cardSuites) => {
   let isStraight              = equateStraight(combo, cardNumbers, cardSuites).pokerHand

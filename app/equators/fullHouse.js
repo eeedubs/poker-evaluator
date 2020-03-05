@@ -1,3 +1,5 @@
+const { getHighestCardsWithExclusion, sortPokerHand } = require('./helpers/index');
+
 module.exports = ((combo, cardNumbers, cardSuites) => {
   const suiteValues = ['Diamonds', 'Clubs', 'Hearts', 'Spades'];
   let pokerHand = [];
@@ -19,7 +21,7 @@ module.exports = ((combo, cardNumbers, cardSuites) => {
       //  2 trips
       if (trips.length === 2){
         let higherTripNumberValue = ((trips[0] > trips[1] && trips[1] !== 1) || trips[0] === 1) ? trips[0] : trips[1];
-        let lowerTripNumberValue = trips.filter((val) => { return val !== higherTripNumberValue });
+        let lowerTripNumberValue = trips.filter((val) => { return val !== higherTripNumberValue })[0];
         let higherTripCards = combo.filter((card) => { return card.number === higherTripNumberValue });
         let lowerTripCards = combo.filter((card) => { return card.number === lowerTripNumberValue });
         let bestTwoOfLowerTripCards = lowerTripCards.sort((a, b) => {
@@ -50,7 +52,7 @@ module.exports = ((combo, cardNumbers, cardSuites) => {
   }
 
   if (fullHouseCards.length === 5){
-    pokerHand = fullHouseCards
+    pokerHand = sortPokerHand(fullHouseCards);
     return { highestHand: 'Full House', pokerHand: pokerHand }
   }
   return { highestHand: null, pokerHand: null };

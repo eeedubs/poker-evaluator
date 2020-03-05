@@ -1,4 +1,4 @@
-const { getNextHighestCards } = require('./helpers/index');
+const { getHighestCardsWithExclusion } = require('./helpers/index');
 
 module.exports = ((combo, cardNumbers, cardSuites) => {
   let pokerHand     = [];
@@ -13,7 +13,7 @@ module.exports = ((combo, cardNumbers, cardSuites) => {
   
   if (trips.length === 1){  
     let tripCards       = combo.filter(card => card.number === trips[0])
-    let remainingCards  = getNextHighestCards(combo, tripCards, 2);
+    let remainingCards  = getHighestCardsWithExclusion(combo, tripCards, 2);
     pokerHand           = tripCards.concat(remainingCards);
     return { highestHand: 'Trips', pokerHand: pokerHand };
   }

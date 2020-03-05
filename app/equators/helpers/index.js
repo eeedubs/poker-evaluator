@@ -1,13 +1,15 @@
-const getNextHighestCards                     = require('./getNextHighestCards');
+const getHighestCardsWithExclusion        = require('./getHighestCardsWithExclusion');
 const getStraightHighCard                     = require('./getStraightHighCard');
 const getFlushSuite                           = require('./getFlushSuite');
 const getFiveHighestCardsFromStraight         = require('./getFiveHighestCardsFromStraight');
 const getHighestCardAmongstDuplicateNumbers   = require('./getHighestCardAmongstDuplicateNumbers');
+const sortPokerHand                           = require('./sortPokerHand');
 
 module.exports = {
-  getNextHighestCards,
+  getHighestCardsWithExclusion,
   getStraightHighCard,
   getFlushSuite,
   getFiveHighestCardsFromStraight,
   getHighestCardAmongstDuplicateNumbers,
+  sortPokerHand,
 }

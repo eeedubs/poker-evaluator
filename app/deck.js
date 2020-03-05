@@ -1,8 +1,10 @@
+const fs = require('fs');
 const Card = require('./card');
+const cardFile = fs.readFileSync('app/assets/cards.txt', 'utf8')
 
 module.exports = class Deck {
-  constructor(source) {
-    this.cards = this._fillDeck(source);
+  constructor() {
+    this.cards = this._fillDeck(cardFile);
   }
 
   _fillDeck(source) {

@@ -2,7 +2,7 @@ const equatorMethods  = require('./equators/index');
 const helperMethods   = require('./equators/helpers/index') 
 
 module.exports = class Hand {
-  constructor(deck, length) {
+  constructor(deck) {
     this.pokerHands = [
       'High Card',
       'Pair',
@@ -15,7 +15,7 @@ module.exports = class Hand {
       'Straight Flush',
       'Royal Flush'
     ]
-    this.cards = new Array(length); // the 2 cards in-hand
+    this.cards = new Array(2); // the 2 cards in-hand
     this.river = []; // the 5-card flop
     this.combo = []; // the 7-card combo (cards + river)
     this.deck = deck; // the 52 cards
