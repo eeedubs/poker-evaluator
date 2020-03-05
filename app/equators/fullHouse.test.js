@@ -161,18 +161,18 @@ describe('#fullHouse()', () => {
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
 
-    it('is passed an empty array for cardSuites', () => {
+    it('is passed an empty array for cardNumbers', () => {
       let card1 = new Card(1, 'Diamonds');
-      let card2 = new Card(8, 'Diamonds');
-      let card3 = new Card(6, 'Diamonds');
-      let card4 = new Card(5, 'Diamonds');
-      let card5 = new Card(3, 'Diamonds');
+      let card2 = new Card(1, 'Clubs');
+      let card3 = new Card(1, 'Hearts');
+      let card4 = new Card(13, 'Diamonds');
+      let card5 = new Card(13, 'Hearts');
       let card6 = new Card(10, 'Hearts');
       let card7 = new Card(12, 'Spades');
 
       const combo = [card1, card2, card3, card4, card5, card6, card7]
-      const cardNumbers = [1, 3, 5, 6, 8, 10, 12];
-      const cardSuites  = [];
+      const cardNumbers = [];
+      const cardSuites  = ['Diamonds', 'Clubs', 'Hearts', 'Diamonds', 'Hearts', 'Hearts', 'Spades'];
       
       let result = equateFullHouse(combo, cardNumbers, cardSuites);
       assert.isNull(result.highestHand, 'highestHand is null');
@@ -181,7 +181,7 @@ describe('#fullHouse()', () => {
 
     it('is passed an empty array for combo', () => {
       const combo = [];
-      const cardNumbers = [1, 2, 3, 4, 5, 6, 7];
+      const cardNumbers = [1, 1, 1, 2, 3, 13, 13];
       const cardSuites = ['diamond', 'diamond', 'diamond', 'diamond', 'diamond', 'heart', 'spade'];
       
       let result = equateFullHouse(combo, cardNumbers, cardSuites);

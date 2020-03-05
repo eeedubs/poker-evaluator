@@ -5,15 +5,15 @@ module.exports = ((combo, cardNumbers, cardSuites) => {
   let pokerHand = [];
   let pairs = [], trips = [];
   let fullHouseCards = [];
-  for (let number of cardNumbers){
-    let occurrences = cardNumbers.filter(val => val === number).length;
+  for (let cardNumber of cardNumbers){
+    let occurrences = combo.filter(card => card.number === cardNumber).length;
 
     // Possibilities: [trips, trips], [trips, pair], [quads, trips], [quads, pair]
-    if (occurrences === 3 && !trips.includes(number) && !pairs.includes(number)){
-      trips.push(number);
+    if (occurrences === 3 && !trips.includes(cardNumber) && !pairs.includes(cardNumber)){
+      trips.push(cardNumber);
     }
-    if (occurrences === 2 && !pairs.includes(number)){
-      pairs.push(number);
+    if (occurrences === 2 && !pairs.includes(cardNumber)){
+      pairs.push(cardNumber);
     }
 
     let isFullHouse = ((trips.length === 2) || (trips.length === 1 && pairs.length >= 1)) 

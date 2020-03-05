@@ -65,7 +65,7 @@ describe('#fourOfAKind()', () => {
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
 
-    it('is passed an empty array for cardSuites', () => {
+    it('is passed an empty array for cardNumbers', () => {
       let card1 = new Card(1, 'Diamonds');
       let card2 = new Card(1, 'Clubs');
       let card3 = new Card(1, 'Hearts');
@@ -75,8 +75,8 @@ describe('#fourOfAKind()', () => {
       let card7 = new Card(12, 'Spades');
 
       const combo = [card1, card2, card3, card4, card5, card6, card7]
-      const cardNumbers = [1, 3, 5, 6, 8, 10, 12];
-      const cardSuites  = [];
+      const cardNumbers = [];
+      const cardSuites  = ['Diamonds', 'Clubs', 'Hearts', 'Spades', 'Diamonds', 'Hearts', 'Spades'];
       
       let result = equateFourOfAKind(combo, cardNumbers, cardSuites);
       assert.isNull(result.highestHand, 'highestHand is null');
