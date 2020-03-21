@@ -1,4 +1,4 @@
-const getHighestCardsWithExclusion        = require('./getHighestCardsWithExclusion');
+const getHighestCardsWithExclusion            = require('./getHighestCardsWithExclusion');
 const getStraightHighCard                     = require('./getStraightHighCard');
 const getFlushSuite                           = require('./getFlushSuite');
 const getFiveHighestCardsFromStraight         = require('./getFiveHighestCardsFromStraight');

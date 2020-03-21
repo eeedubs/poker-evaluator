@@ -1,9 +1,10 @@
 const { sortPokerHand } = require('./helpers/index');
 
-module.exports = ((combo, cardNumbers, cardSuites) => {
+module.exports = ((hand) => {
+  if (!hand.combo){ return { highestHand: null, pokerHand: null } };
   let pokerHand = [];
-  for (let cardSuite of cardSuites){
-    let sameSuiteCards = combo.filter((card, i, arr) => { return card.suite === cardSuite });
+  for (let cardSuite of hand.cardSuites){
+    let sameSuiteCards = hand.combo.filter(card => card.suite === cardSuite);
     if (sameSuiteCards.length >= 5){
       let unsortedCards= sameSuiteCards.sort((a, b) => { 
         if ((a.number < b.number && a.number !== 1) || (b.number === 1)){

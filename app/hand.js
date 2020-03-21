@@ -1,25 +1,12 @@
+const fs = require('fs');
+const pokerHandFile = fs.readFileSync('app/assets/pokerHands.txt', 'utf8')
 const equatorMethods  = require('./equators/index');
 const helperMethods   = require('./equators/helpers/index') 
 
 module.exports = class Hand {
-  constructor(deck) {
-    this.pokerHands = [
-      'High Card',
-      'Pair',
-      'Two Pair',
-      'Trips',
-      'Straight',
-      'Flush',
-      'Full House',
-      'Four Of A Kind',
-      'Straight Flush',
-      'Royal Flush'
-    ]
-    this.cards = new Array(2); // the 2 cards in-hand
-    this.river = []; // the 5-card flop
-    this.combo = []; // the 7-card combo (cards + river)
+  constructor(deck, cards = new Array(2)) {
     this.deck = deck; // the 52 cards
-    this.bestFive = [];
+    this.cards = cards; // the 2 cards in-hand
   }
 
   get cardNumbers(){
@@ -38,6 +25,16 @@ module.exports = class Hand {
     let highCardNumberValue = this.highCardNumberValue;
     let highCards = this.combo.filter((card) => { return card.number === highCardNumberValue });
     return helperMethods.getHighestCardAmongstDuplicateNumbers(highCards, 1)[0].suite
+  }
+
+  get pokerHandStrength() {
+    let lines = pokerHandFile.split(",\n");
+    for (let line of lines){
+      let parsedLine = JSON.parse(line);
+      if (parsedLine["Hand"] === this.highestHand){ 
+        return parsedLine["Strength"];
+      }
+    }
   }
 
   setRiver(river){ 
@@ -60,7 +57,7 @@ module.exports = class Hand {
 
     // RF, SF, 4K, FH,FL, ST, 3K, 2P, P, HC
     for (let func of equatorFunctions){
-      let response = equatorMethods[func](this.combo, this.cardNumbers, this.cardSuites);
+      let response = equatorMethods[func](this);
       if (response.pokerHand){
         this.bestFive     = response.pokerHand;
         this.highestHand  = response.highestHand;
@@ -68,6 +65,6 @@ module.exports = class Hand {
       }
     }
 
-    this.handValue = this.pokerHands.indexOf(this.highestHand);
+    this.handValue = this.pokerHandStrength;
   }
 }

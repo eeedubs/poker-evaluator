@@ -6,4 +6,4 @@ game.play(1);
 //   game = new Game();
 //   game.play(1);
 // }
-console.log(game.hands[0]);
+console.log(game.hands);

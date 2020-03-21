@@ -24,7 +24,7 @@ describe('#fullHouse()', () => {
       hand.combo = unsortedPokerHand.concat(discardCards);
       const pokerHand = sortPokerHand(unsortedPokerHand);
       
-      let result = equateFullHouse(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateFullHouse(hand);
       assert.isNotNull(result);
       assert.deepEqual(result.pokerHand, pokerHand, 'returns the pokerHand, sorted from highest to lowest');
       assert.deepEqual(result.highestHand, 'Full House', 'returns "Full House" as the highestHand');
@@ -49,7 +49,7 @@ describe('#fullHouse()', () => {
       hand.combo = unsortedPokerHand.concat(discardCards);
       const pokerHand = sortPokerHand(unsortedPokerHand);
       
-      let result = equateFullHouse(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateFullHouse(hand);
       assert.isNotNull(result);
       assert.deepEqual(result.pokerHand, pokerHand, 'returns the pokerHand, sorted from highest to lowest');
       assert.deepEqual(result.highestHand, 'Full House', 'returns "Full House" as the highestHand');
@@ -74,7 +74,7 @@ describe('#fullHouse()', () => {
       hand.combo = unsortedPokerHand.concat(discardCards);
       const pokerHand = sortPokerHand(unsortedPokerHand);
       
-      let result = equateFullHouse(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateFullHouse(hand);
       assert.isNotNull(result);
       assert.deepEqual(result.pokerHand, pokerHand, 'returns the pokerHand, sorted from highest to lowest');
       assert.deepEqual(result.highestHand, 'Full House', 'returns "Full House" as the highestHand');
@@ -100,7 +100,7 @@ describe('#fullHouse()', () => {
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
       
-      let result = equateFullHouse(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateFullHouse(hand);
       assert.isNull(result.highestHand, 'highestHand is null');
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
@@ -123,7 +123,7 @@ describe('#fullHouse()', () => {
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
       
-      let result = equateFullHouse(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateFullHouse(hand);
       assert.isNull(result.highestHand, 'highestHand is null');
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
@@ -146,45 +146,13 @@ describe('#fullHouse()', () => {
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
       
-      let result = equateFullHouse(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateFullHouse(hand);
       assert.isNull(result.highestHand, 'highestHand is null');
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
 
-    it('is passed empty arrays for combo, cardNumbers and cardSuites', () => {
-      const combo = [];
-      const cardNumbers = [];
-      const cardSuites = [];
-      
-      let result = equateFullHouse(combo, cardNumbers, cardSuites);
-      assert.isNull(result.highestHand, 'highestHand is null');
-      assert.isNull(result.pokerHand, 'pokerHand is null');
-    });
-
-    it('is passed an empty array for cardNumbers', () => {
-      let card1 = new Card(1, 'Diamonds');
-      let card2 = new Card(1, 'Clubs');
-      let card3 = new Card(1, 'Hearts');
-      let card4 = new Card(13, 'Diamonds');
-      let card5 = new Card(13, 'Hearts');
-      let card6 = new Card(10, 'Hearts');
-      let card7 = new Card(12, 'Spades');
-
-      const combo = [card1, card2, card3, card4, card5, card6, card7]
-      const cardNumbers = [];
-      const cardSuites  = ['Diamonds', 'Clubs', 'Hearts', 'Diamonds', 'Hearts', 'Hearts', 'Spades'];
-      
-      let result = equateFullHouse(combo, cardNumbers, cardSuites);
-      assert.isNull(result.highestHand, 'highestHand is null');
-      assert.isNull(result.pokerHand, 'pokerHand is null');
-    });
-
-    it('is passed an empty array for combo', () => {
-      const combo = [];
-      const cardNumbers = [1, 1, 1, 2, 3, 13, 13];
-      const cardSuites = ['diamond', 'diamond', 'diamond', 'diamond', 'diamond', 'heart', 'spade'];
-      
-      let result = equateFullHouse(combo, cardNumbers, cardSuites);
+    it('is passed an empty hand', () => {
+      let result = equateFullHouse([]);
       assert.isNull(result.highestHand);
       assert.isNull(result.pokerHand);
     });

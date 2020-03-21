@@ -24,7 +24,7 @@ describe('#highCard()', () => {
       hand.combo = unsortedPokerHand.concat(discardCards);
       const pokerHand = sortPokerHand(unsortedPokerHand);
       
-      let result = equateHighCard(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateHighCard(hand);
       assert.isNotNull(result);
       assert.equal(result.pokerHand[0], pokerHand[0], 'the first card returned is the Ace of Spades');
       assert.deepEqual(result.pokerHand, pokerHand, 'returns the pokerHand, sorted from highest to lowest');
@@ -50,7 +50,7 @@ describe('#highCard()', () => {
       hand.combo = unsortedPokerHand.concat(discardCards);
       const pokerHand = sortPokerHand(unsortedPokerHand);
       
-      let result = equateHighCard(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateHighCard(hand);
       assert.isNotNull(result);
       assert.equal(result.pokerHand[0], pokerHand[0], 'the first card returned is the Ace of Spades');
       assert.deepEqual(result.pokerHand, pokerHand, 'returns the pokerHand, sorted from highest to lowest');

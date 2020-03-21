@@ -4,12 +4,12 @@ const cardFile = fs.readFileSync('app/assets/cards.txt', 'utf8')
 
 module.exports = class Deck {
   constructor() {
-    this.cards = this._fillDeck(cardFile);
+    this.cards = this._fillDeck();
   }
 
-  _fillDeck(source) {
+  _fillDeck() {
     let deck = [];
-    let lines = source.split(",\n");
+    let lines = cardFile.split(",\n");
     for (let line of lines){
       let parsedLine = JSON.parse(line);
       let number = parsedLine["Number"];

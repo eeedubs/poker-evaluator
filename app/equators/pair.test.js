@@ -24,7 +24,7 @@ describe('#pair()', () => {
       hand.combo = unsortedPokerHand.concat(discardCards);
       const pokerHand = sortPokerHand(unsortedPokerHand);
       
-      let result = equatePair(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equatePair(hand);
       assert.isNotNull(result);
       assert.deepEqual(result.pokerHand, pokerHand, 'returns the pokerHand, sorted from highest to lowest');
       assert.deepEqual(result.highestHand, 'Pair', 'returns "Pair" as the highestHand');
@@ -50,7 +50,7 @@ describe('#pair()', () => {
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
       
-      let result = equatePair(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equatePair(hand);
       assert.isNull(result.highestHand, 'highestHand is null');
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
@@ -73,7 +73,7 @@ describe('#pair()', () => {
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
       
-      let result = equatePair(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equatePair(hand);
       assert.isNull(result.highestHand, 'highestHand is null');
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
@@ -96,45 +96,13 @@ describe('#pair()', () => {
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
       
-      let result = equatePair(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equatePair(hand);
       assert.isNull(result.highestHand, 'highestHand is null');
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
 
-    it('is passed empty arrays for combo, cardNumbers and cardSuites', () => {
-      const combo = [];
-      const cardNumbers = [];
-      const cardSuites = [];
-      
-      let result = equatePair(combo, cardNumbers, cardSuites);
-      assert.isNull(result.highestHand, 'highestHand is null');
-      assert.isNull(result.pokerHand, 'pokerHand is null');
-    });
-
-    it('is passed an empty array for cardNumbers', () => {
-      let card1 = new Card(1, 'Diamonds');
-      let card2 = new Card(1, 'Hearts');
-      let card3 = new Card(13, 'Diamonds');
-      let card4 = new Card(11, 'Diamonds');
-      let card5 = new Card(9, 'Diamonds');
-      let card6 = new Card(7, 'Hearts');
-      let card7 = new Card(5, 'Spades');
-
-      const combo = [card1, card2, card3, card4, card5, card6, card7]
-      const cardNumbers = [];
-      const cardSuites  = ['Diamonds', 'Hearts', 'Diamonds', 'Diamonds', 'Diamonds', 'Hearts', 'Spades'];
-      
-      let result = equatePair(combo, cardNumbers, cardSuites);
-      assert.isNull(result.highestHand, 'highestHand is null');
-      assert.isNull(result.pokerHand, 'pokerHand is null');
-    });
-
-    it('is passed an empty array for combo', () => {
-      const combo = [];
-      const cardNumbers = [1, 1, 3, 4, 5, 6, 7];
-      const cardSuites = ['diamond', 'diamond', 'diamond', 'diamond', 'diamond', 'heart', 'spade'];
-      
-      let result = equatePair(combo, cardNumbers, cardSuites);
+    it('is passed an empty hand', () => {
+      let result = equatePair([]);
       assert.isNull(result.highestHand);
       assert.isNull(result.pokerHand);
     });

@@ -1,7 +1,8 @@
 const { getHighestCardsWithExclusion, sortPokerHand } = require('./helpers/index');
 
-module.exports = ((combo, cardNumbers, cardSuites) => {
-  let unsortedCards = getHighestCardsWithExclusion(combo, [], 5);
+module.exports = ((hand) => {
+  if (!hand.combo){ return { highestHand: null, pokerHand: null } };
+  let unsortedCards = getHighestCardsWithExclusion(hand.combo, [], 5);
   let pokerHand = sortPokerHand(unsortedCards);
   return { highestHand: 'High Card', pokerHand: pokerHand };
 });

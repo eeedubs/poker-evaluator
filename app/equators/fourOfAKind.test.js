@@ -24,7 +24,7 @@ describe('#fourOfAKind()', () => {
       hand.combo = unsortedPokerHand.concat(discardCards);
       const pokerHand = sortPokerHand(unsortedPokerHand);
       
-      let result = equateFourOfAKind(hand.combo, hand.cardNumbers, hand.cardSuites);
+      let result = equateFourOfAKind(hand);
       assert.isNotNull(result);
       assert.deepEqual(result.pokerHand, pokerHand, 'returns the pokerHand, sorted from highest to lowest');
       assert.deepEqual(result.highestHand, 'Four Of A Kind', 'returns "Four Of A Kind" as the highestHand');
@@ -50,45 +50,13 @@ describe('#fourOfAKind()', () => {
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
       
-      let result = equateFourOfAKind(hand.combo, hand.cardNumbers, hand.cardSuites);
-      assert.isNull(result.highestHand, 'highestHand is null');
-      assert.isNull(result.pokerHand, 'pokerHand is null');
-    });
-
-    it('is passed empty arrays for combo, cardNumbers and cardSuites', () => {
-      const combo = [];
-      const cardNumbers = [];
-      const cardSuites = [];
-      
-      let result = equateFourOfAKind(combo, cardNumbers, cardSuites);
-      assert.isNull(result.highestHand, 'highestHand is null');
-      assert.isNull(result.pokerHand, 'pokerHand is null');
-    });
-
-    it('is passed an empty array for cardNumbers', () => {
-      let card1 = new Card(1, 'Diamonds');
-      let card2 = new Card(1, 'Clubs');
-      let card3 = new Card(1, 'Hearts');
-      let card4 = new Card(1, 'Spades');
-      let card5 = new Card(3, 'Diamonds');
-      let card6 = new Card(10, 'Hearts');
-      let card7 = new Card(12, 'Spades');
-
-      const combo = [card1, card2, card3, card4, card5, card6, card7]
-      const cardNumbers = [];
-      const cardSuites  = ['Diamonds', 'Clubs', 'Hearts', 'Spades', 'Diamonds', 'Hearts', 'Spades'];
-      
-      let result = equateFourOfAKind(combo, cardNumbers, cardSuites);
+      let result = equateFourOfAKind(hand);
       assert.isNull(result.highestHand, 'highestHand is null');
       assert.isNull(result.pokerHand, 'pokerHand is null');
     });
 
     it('is passed an empty array for combo', () => {
-      const combo = [];
-      const cardNumbers = [1, 2, 3, 4, 5, 6, 7];
-      const cardSuites = ['diamond', 'diamond', 'diamond', 'diamond', 'diamond', 'heart', 'spade'];
-      
-      let result = equateFourOfAKind(combo, cardNumbers, cardSuites);
+      let result = equateFourOfAKind([]);
       assert.isNull(result.highestHand);
       assert.isNull(result.pokerHand);
     });

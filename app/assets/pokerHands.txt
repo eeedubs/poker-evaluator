@@ -1,0 +1,40 @@
+{
+  "Hand": "Royal Flush", 
+  "Strength": 10
+},
+{
+  "Hand": "Straight Flush", 
+  "Strength": 9
+},
+{
+  "Hand": "Four Of A Kind", 
+  "Strength": 8
+},
+{
+  "Hand": "Full House", 
+  "Strength": 7
+},
+{
+  "Hand": "Flush", 
+  "Strength": 6
+},
+{
+  "Hand": "Straight", 
+  "Strength": 5
+},
+{
+  "Hand": "Trips", 
+  "Strength": 4
+},
+{
+  "Hand": "Two Pair", 
+  "Strength": 3
+},
+{
+  "Hand": "Pair", 
+  "Strength": 2
+},
+{
+  "Hand": "High Card", 
+  "Strength": 1
+},

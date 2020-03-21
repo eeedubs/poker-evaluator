@@ -1,33 +1,36 @@
-const { getHighestCardsWithExclusion } = require('./helpers/index');
+const { getHighestCardsWithExclusion, sortPokerHand } = require('./helpers/index');
 
-module.exports = ((combo, cardNumbers, cardSuites) => {
-  let pokerHand   = [];
-  let pairs       = [];
-  for (let number of cardNumbers) {
-    let occurrences = cardNumbers.filter((val, i, arr) => { return arr[i] === number }).length;
+module.exports = ((hand) => {
+  if (!hand.combo){ return { highestHand: null, pokerHand: null } };
+  let pokerHand     = [];
+  let unsortedCards = []
+  let pairs         = [];
+  for (let cardNumber of hand.cardNumbers) {
+    let occurrences = hand.combo.filter(card => card.number === cardNumber).length;
     
-    if (occurrences === 2 && !pairs.includes(number)){
-      pairs.push(number)
+    if (occurrences === 2 && !pairs.includes(cardNumber)){
+      pairs.push(cardNumber)
     }
   }
   if (pairs.length >= 2){
     if (pairs.length === 3){
       let twoHighestPairValues = pairs.sort((a, b) => { 
-        if (a < b && a !== 1){
+        if ((a < b) || (b === 1 && a !== 1)){
           return 1;
         } else {
           return -1;
         }
       }).slice(0, 2);
-      let pairCards       = combo.filter(val => twoHighestPairValues.includes(val.number))
-      let nextHighestCard = getHighestCardsWithExclusion(combo, pairCards, 1);
-      pokerHand           = pairCards.concat(nextHighestCard);
+      let pairCards = hand.combo.filter(card => twoHighestPairValues.includes(card.number))
+      let nextHighestCard = getHighestCardsWithExclusion(hand.combo, pairCards, 1);
+      unsortedCards = pairCards.concat(nextHighestCard);
     } else {
-      let pairCards       = combo.filter(val => [pairs[0], pairs[1]].includes(val.number))
-      let nextHighestCard = getHighestCardsWithExclusion(combo, pairCards, 1);
-      pokerHand           = pairCards.concat(nextHighestCard);
+      let pairCards = hand.combo.filter(card => [pairs[0], pairs[1]].includes(card.number))
+      let nextHighestCard = getHighestCardsWithExclusion(hand.combo, pairCards, 1);
+      unsortedCards = pairCards.concat(nextHighestCard);
     }
+    pokerHand = sortPokerHand(unsortedCards);
     return { highestHand: 'Two Pair', pokerHand: pokerHand };
   }
-  return false;
+  return { highestHand: null, pokerHand: null };
 });

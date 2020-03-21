@@ -1,12 +1,13 @@
 const { getHighestCardsWithExclusion, sortPokerHand } = require('./helpers/index');
 
-module.exports = ((combo, cardNumbers, cardSuites) => {
+module.exports = ((hand) => {
+  if (!hand.combo){ return { highestHand: null, pokerHand: null } };
   const suiteValues = ['Diamonds', 'Clubs', 'Hearts', 'Spades'];
   let pokerHand = [];
   let pairs = [], trips = [];
   let fullHouseCards = [];
-  for (let cardNumber of cardNumbers){
-    let occurrences = combo.filter(card => card.number === cardNumber).length;
+  for (let cardNumber of hand.cardNumbers){
+    let occurrences = hand.combo.filter(card => card.number === cardNumber).length;
 
     // Possibilities: [trips, trips], [trips, pair], [quads, trips], [quads, pair]
     if (occurrences === 3 && !trips.includes(cardNumber) && !pairs.includes(cardNumber)){
@@ -22,8 +23,8 @@ module.exports = ((combo, cardNumbers, cardSuites) => {
       if (trips.length === 2){
         let higherTripNumberValue = ((trips[0] > trips[1] && trips[1] !== 1) || trips[0] === 1) ? trips[0] : trips[1];
         let lowerTripNumberValue = trips.filter((val) => { return val !== higherTripNumberValue })[0];
-        let higherTripCards = combo.filter((card) => { return card.number === higherTripNumberValue });
-        let lowerTripCards = combo.filter((card) => { return card.number === lowerTripNumberValue });
+        let higherTripCards = hand.combo.filter((card) => { return card.number === higherTripNumberValue });
+        let lowerTripCards = hand.combo.filter((card) => { return card.number === lowerTripNumberValue });
         let bestTwoOfLowerTripCards = lowerTripCards.sort((a, b) => {
           if (suiteValues.indexOf(a.suite) < suiteValues.indexOf(b.suite)){
             return 1;
@@ -39,13 +40,13 @@ module.exports = ((combo, cardNumbers, cardSuites) => {
         if (pairs.length === 2){
           let higherPairNumberValue = ((pairs[0] > pairs[1] && pairs[1] !== 1) || pairs[0] === 1) ? pairs[0] : pairs[1];
           let fullHouseValues = [trips[0], higherPairNumberValue]
-          fullHouseCards = combo.filter((card) => { return fullHouseValues.includes(card.number) })
+          fullHouseCards = hand.combo.filter((card) => { return fullHouseValues.includes(card.number) })
           break;
         }
           // 1 trips with 1 pair 
         else {
           let fullHouseValues = [trips[0], pairs[0]];
-          fullHouseCards = combo.filter((card) => { return fullHouseValues.includes(card.number) });
+          fullHouseCards = hand.combo.filter((card) => { return fullHouseValues.includes(card.number) });
         }
       }
     };
