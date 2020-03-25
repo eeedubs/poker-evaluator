@@ -1,7 +1,7 @@
 const { assert } = require('chai');
-const { getHighestCardsWithExclusion, sortPokerHand } = require('./helpers/index');
+const { getHighestCardsWithExclusion, sortHighToLow } = require('../helpers/index');
 const { Card, Hand, Deck } = require('../index');
-const equateFourOfAKind = require('./fourOfAKind');
+const equateFourOfAKind = require('./equateFourOfAKind');
 
 describe('#fourOfAKind()', () => {
   describe('is four of a kind', () => {
@@ -22,7 +22,7 @@ describe('#fourOfAKind()', () => {
       const deck = new Deck();
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
-      const pokerHand = sortPokerHand(unsortedPokerHand);
+      const pokerHand = sortHighToLow(unsortedPokerHand);
       
       let result = equateFourOfAKind(hand);
       assert.isNotNull(result);

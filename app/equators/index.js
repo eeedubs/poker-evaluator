@@ -1,13 +1,13 @@
-const equateRoyalFlush    = require('./royalFlush.js');
-const equateStraightFlush = require('./straightFlush.js');
-const equateFourOfAKind   = require('./fourOfAKind.js');
-const equateFullHouse     = require('./fullHouse.js');
-const equateFlush         = require('./flush.js');
-const equateStraight      = require('./straight.js');
-const equateTrips         = require('./trips.js');
-const equateTwoPair       = require('./twoPair.js');
-const equatePair          = require('./pair.js');
-const equateHighCard      = require('./highCard.js');
+const equateRoyalFlush    = require('./equateRoyalFlush.js');
+const equateStraightFlush = require('./equateStraightFlush.js');
+const equateFourOfAKind   = require('./equateFourOfAKind.js');
+const equateFullHouse     = require('./equateFullHouse.js');
+const equateFlush         = require('./equateFlush.js');
+const equateStraight      = require('./equateStraight.js');
+const equateTrips         = require('./equateTrips.js');
+const equateTwoPair       = require('./equateTwoPair.js');
+const equatePair          = require('./equatePair.js');
+const equateHighCard      = require('./equateHighCard.js');
 
 module.exports = {
   equateRoyalFlush,

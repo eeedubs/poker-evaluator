@@ -1,15 +1,15 @@
 const { assert } = require('chai');
-const { getHighestCardsWithExclusion, sortPokerHand } = require('./helpers/index');
+const { getHighestCardsWithExclusion, sortHighToLow } = require('../helpers/index');
 const { Card, Hand, Deck } = require('../index');
-const equateFullHouse = require('./fullHouse');
+const equateFullHouse = require('./equateFullHouse');
 
 describe('#fullHouse()', () => {
   describe('is a Full House', () => {
     it('is passed a combo with a set of trips and a pair', () => {
       let unsortedPokerHand = [
-        new Card(1, 'Diamonds'),
-        new Card(1, 'Clubs'),
         new Card(1, 'Hearts'),
+        new Card(1, 'Clubs'),
+        new Card(1, 'Diamonds'),
         new Card(3, 'Diamonds'),
         new Card(3, 'Spades'),
       ]
@@ -22,7 +22,7 @@ describe('#fullHouse()', () => {
       const deck = new Deck();
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
-      const pokerHand = sortPokerHand(unsortedPokerHand);
+      const pokerHand = sortHighToLow(unsortedPokerHand);
       
       let result = equateFullHouse(hand);
       assert.isNotNull(result);
@@ -31,23 +31,20 @@ describe('#fullHouse()', () => {
     });
 
     it('is passed a combo with two sets of trips', () => {
-      let unsortedPokerHand = [
+      let cards = [
         new Card(1, 'Diamonds'),
         new Card(1, 'Clubs'),
         new Card(1, 'Hearts'),
-        new Card(3, 'Hearts'),
-        new Card(3, 'Spades'),
-      ]
-
-      let discardCards = [
-        new Card(3, 'Clubs'),
+        new Card(6, 'Hearts'),
         new Card(6, 'Spades'),
+        new Card(6, 'Clubs'),
+        new Card(3, 'Spades')
       ]
 
       const deck = new Deck();
       const hand = new Hand(deck);
-      hand.combo = unsortedPokerHand.concat(discardCards);
-      const pokerHand = sortPokerHand(unsortedPokerHand);
+      hand.combo = cards;
+      const pokerHand = sortHighToLow(hand.combo).slice(0, 5);
       
       let result = equateFullHouse(hand);
       assert.isNotNull(result);
@@ -56,23 +53,20 @@ describe('#fullHouse()', () => {
     });
 
     it('is passed a combo with trips and two pairs', () => {
-      let unsortedPokerHand = [
+      let cards = [
         new Card(1, 'Diamonds'),
         new Card(1, 'Clubs'),
         new Card(1, 'Hearts'),
         new Card(6, 'Hearts'),
         new Card(6, 'Spades'),
-      ]
-
-      let discardCards = [
         new Card(3, 'Clubs'),
-        new Card(3, 'Spades'),
+        new Card(3, 'Spades')
       ]
 
       const deck = new Deck();
       const hand = new Hand(deck);
-      hand.combo = unsortedPokerHand.concat(discardCards);
-      const pokerHand = sortPokerHand(unsortedPokerHand);
+      hand.combo = cards
+      const pokerHand = sortHighToLow(hand.combo).slice(0, 5);
       
       let result = equateFullHouse(hand);
       assert.isNotNull(result);

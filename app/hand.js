@@ -1,7 +1,7 @@
-const fs = require('fs');
-const pokerHandFile = fs.readFileSync('app/assets/pokerHands.txt', 'utf8')
-const equatorMethods  = require('./equators/index');
-const helperMethods   = require('./equators/helpers/index') 
+const fs              = require('fs');
+const pokerHandFile   = fs.readFileSync('app/assets/pokerHands.txt', 'utf8')
+const equators        = require('./equators/index');
+const helperMethods   = require('./helpers/index') 
 
 module.exports = class Hand {
   constructor(deck, cards = new Array(2)) {
@@ -9,16 +9,28 @@ module.exports = class Hand {
     this.cards = cards; // the 2 cards in-hand
   }
 
-  get cardNumbers(){
-    return this.combo.map((card) => { return card.number }).sort((a, b) => { return a - b });
+  get comboNumbers(){
+    if (!this.combo){ return [] };
+    return this.combo.map(card => card.number).sort((a, b) => { return a - b });
   }
 
-  get cardSuites() {
-    return this.combo.map((card) => { return card.suite }).sort();
+  get comboSuites() {
+    if (!this.combo){ return [] };
+    return this.combo.map(card => card.suite).sort();
+  }
+
+  get bestFiveNumbers(){
+    if (!this.bestFiveCards){ return [] };
+    return this.bestFiveCards.map(card => card.number).sort((a, b) => { return a - b });
+  }
+
+  get bestFiveSuites(){
+    if (!this.bestFiveCards){ return [] };
+    return this.bestFiveCards.map(card => card.suite).sort();
   }
 
   get highCardNumberValue() {
-    return (this.cardNumbers[0] === 1) ? 1 : this.cardNumbers[6]
+    return (this.comboNumbers[0] === 1) ? 1 : this.comboNumbers[6]
   }
 
   get highCardSuiteValue() {
@@ -46,25 +58,20 @@ module.exports = class Hand {
     this.combo = riverCards.concat(cards);
   }
 
-  removeDeck(){
-    this.deck = [];
-  }
-
-  evaluateHandPossibilities(){
+  evaluateHandOutcomes(){
     this.highCardNumber  = this.highCardNumberValue;
     this.highCardSuite   = this.highCardSuiteValue;
-    let equatorFunctions = Object.keys(equatorMethods);
+    let equatorFunctions = Object.keys(equators);
 
     // RF, SF, 4K, FH,FL, ST, 3K, 2P, P, HC
     for (let func of equatorFunctions){
-      let response = equatorMethods[func](this);
+      let response = equators[func](this);
       if (response.pokerHand){
-        this.bestFive     = response.pokerHand;
-        this.highestHand  = response.highestHand;
-        break;
+        this.bestFiveCards = response.pokerHand;
+        this.highestHand = response.highestHand;
+        this.handValue = this.pokerHandStrength;
+        return;
       }
     }
-
-    this.handValue = this.pokerHandStrength;
   }
 }

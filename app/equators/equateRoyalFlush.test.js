@@ -1,7 +1,7 @@
 const { assert } = require('chai');
-const { getHighestCardsWithExclusion, sortPokerHand } = require('./helpers/index');
+const { getHighestCardsWithExclusion, sortHighToLow } = require('../helpers/index');
 const { Card, Hand, Deck } = require('../index');
-const equateRoyalFlush = require('./royalFlush');
+const equateRoyalFlush = require('./equateRoyalFlush');
 
 describe('#royalFlush()', () => {
   describe('is a Royal Flush', () => {
@@ -22,7 +22,7 @@ describe('#royalFlush()', () => {
       const deck = new Deck();
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
-      const pokerHand = sortPokerHand(unsortedPokerHand);
+      const pokerHand = sortHighToLow(unsortedPokerHand);
       
       let result = equateRoyalFlush(hand);
       assert.isNotNull(result);

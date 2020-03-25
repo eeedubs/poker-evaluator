@@ -1,6 +1,6 @@
-module.exports = ((pokerHand) => {
+module.exports = ((cards) => {
   const suiteValues = ['Diamonds', 'Clubs', 'Hearts', 'Spades'];
-  return pokerHand.sort((a, b) => {
+  return cards.sort((a, b) => {
     if (a.number !== 1 && b.number === 1){
       return 1;
     } else if (a.number === 1 && b.number !== 1){

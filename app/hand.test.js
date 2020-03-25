@@ -4,22 +4,10 @@ const assert      = chai.assert
 const expect      = chai.expect
 
 const { Hand, Deck, Card } = require('./index');
-const equatorMethods  = require('./equators/index');
+const equators             = require('./equators/index');
 
 describe('#hand()', () => {
   it('it creates a hand with 2 cards and a deck', () => {
-    const pokerHands = [
-      'Royal Flush',
-      'Straight Flush',
-      'Four Of A Kind',
-      'Full House',
-      'Flush',
-      'Straight',
-      'Trips',
-      'Two Pair',
-      'Pair',
-      'High Card'
-    ]
     let deck = new Deck()
     let hand = new Hand(deck);
     
@@ -44,15 +32,15 @@ describe('#hand()', () => {
     hand.setRiver(river)
 
     it('it can get the card numbers in an array', () => {
-      let cardNumbers = [1, 2, 3, 4, 11, 12, 13];
-      assert.isArray(hand.cardNumbers, 'cardNumbers returns an array');
-      assert.deepEqual(hand.cardNumbers, cardNumbers, 'cardNumbers returns the sorted card numbers');
+      let comboNumbers = [1, 2, 3, 4, 11, 12, 13];
+      assert.isArray(hand.comboNumbers, 'comboNumbers returns an array');
+      assert.deepEqual(hand.comboNumbers, comboNumbers, 'comboNumbers returns the sorted card numbers');
     });
 
     it('it can get the card suites in an array', () => {
       let cardSuites = ['Diamonds', 'Diamonds', 'Diamonds', 'Diamonds', 'Diamonds', 'Diamonds', 'Spades'];
-      assert.isArray(hand.cardSuites, 'cardSuites returns an array');
-      assert.deepEqual(hand.cardSuites, cardSuites, 'cardSuites returns the cardSuites');
+      assert.isArray(hand.comboSuites, 'cardSuites returns an array');
+      assert.deepEqual(hand.comboSuites, cardSuites, 'cardSuites returns the cardSuites');
     });
 
     it('it can get the high card number value', () => {
@@ -140,7 +128,7 @@ describe('#hand()', () => {
     });
   });
 
-  describe('evaluateHandPossibilities', () => {
+  describe('evaluateHandOutcomes', () => {
     it('can recognize a Royal Flush', () => {
       let deck = new Deck()
       const cardOne = new Card(1, 'Spades');
@@ -154,20 +142,20 @@ describe('#hand()', () => {
       let river = { cards: [cardThree, cardFour, cardFive, cardSix, cardSeven] };
       let hand = new Hand(deck, cards);
       
-      let royalFlushSpy = sinon.spy(equatorMethods, "equateRoyalFlush");
-      let straightFlushSpy = sinon.spy(equatorMethods, "equateStraightFlush");
-      let fourOfAKindSpy = sinon.spy(equatorMethods, "equateFourOfAKind");
-      let fullHouseSpy = sinon.spy(equatorMethods, "equateFullHouse");
-      let flushSpy = sinon.spy(equatorMethods, "equateFlush");
-      let straightSpy = sinon.spy(equatorMethods, "equateStraight");
-      let tripsSpy = sinon.spy(equatorMethods, "equateTrips");
-      let twoPairSpy = sinon.spy(equatorMethods, "equateTwoPair");
-      let pairSpy = sinon.spy(equatorMethods, "equatePair");
-      let highCardSpy = sinon.spy(equatorMethods, "equateHighCard");
+      let royalFlushSpy = sinon.spy(equators, "equateRoyalFlush");
+      let straightFlushSpy = sinon.spy(equators, "equateStraightFlush");
+      let fourOfAKindSpy = sinon.spy(equators, "equateFourOfAKind");
+      let fullHouseSpy = sinon.spy(equators, "equateFullHouse");
+      let flushSpy = sinon.spy(equators, "equateFlush");
+      let straightSpy = sinon.spy(equators, "equateStraight");
+      let tripsSpy = sinon.spy(equators, "equateTrips");
+      let twoPairSpy = sinon.spy(equators, "equateTwoPair");
+      let pairSpy = sinon.spy(equators, "equatePair");
+      let highCardSpy = sinon.spy(equators, "equateHighCard");
 
-      hand.setRiver(river)
-      hand.evaluateHandPossibilities();
-      sinon.restore()
+      hand.setRiver(river);
+      hand.evaluateHandOutcomes();
+      sinon.restore();
       
       assert.equal(hand.highestHand, 'Royal Flush', 'the highest hand is a Royal Flush');
       assert.equal(hand.handValue, 10, 'the hand value is 10');
@@ -196,20 +184,20 @@ describe('#hand()', () => {
       let river = { cards: [cardThree, cardFour, cardFive, cardSix, cardSeven] };
       let hand = new Hand(deck, cards);
       
-      let royalFlushSpy = sinon.spy(equatorMethods, "equateRoyalFlush");
-      let straightFlushSpy = sinon.spy(equatorMethods, "equateStraightFlush");
-      let fourOfAKindSpy = sinon.spy(equatorMethods, "equateFourOfAKind");
-      let fullHouseSpy = sinon.spy(equatorMethods, "equateFullHouse");
-      let flushSpy = sinon.spy(equatorMethods, "equateFlush");
-      let straightSpy = sinon.spy(equatorMethods, "equateStraight");
-      let tripsSpy = sinon.spy(equatorMethods, "equateTrips");
-      let twoPairSpy = sinon.spy(equatorMethods, "equateTwoPair");
-      let pairSpy = sinon.spy(equatorMethods, "equatePair");
-      let highCardSpy = sinon.spy(equatorMethods, "equateHighCard");
+      let royalFlushSpy = sinon.spy(equators, "equateRoyalFlush");
+      let straightFlushSpy = sinon.spy(equators, "equateStraightFlush");
+      let fourOfAKindSpy = sinon.spy(equators, "equateFourOfAKind");
+      let fullHouseSpy = sinon.spy(equators, "equateFullHouse");
+      let flushSpy = sinon.spy(equators, "equateFlush");
+      let straightSpy = sinon.spy(equators, "equateStraight");
+      let tripsSpy = sinon.spy(equators, "equateTrips");
+      let twoPairSpy = sinon.spy(equators, "equateTwoPair");
+      let pairSpy = sinon.spy(equators, "equatePair");
+      let highCardSpy = sinon.spy(equators, "equateHighCard");
 
-      hand.setRiver(river)
-      hand.evaluateHandPossibilities();
-      sinon.restore()
+      hand.setRiver(river);
+      hand.evaluateHandOutcomes();
+      sinon.restore();
       
       assert.equal(hand.highestHand, 'Straight', 'the highest hand is a Straight');
       assert.equal(hand.handValue, 5, 'the hand value is 5');
@@ -238,20 +226,20 @@ describe('#hand()', () => {
       let river = { cards: [cardThree, cardFour, cardFive, cardSix, cardSeven] };
       let hand = new Hand(deck, cards);
       
-      let royalFlushSpy = sinon.spy(equatorMethods, "equateRoyalFlush");
-      let straightFlushSpy = sinon.spy(equatorMethods, "equateStraightFlush");
-      let fourOfAKindSpy = sinon.spy(equatorMethods, "equateFourOfAKind");
-      let fullHouseSpy = sinon.spy(equatorMethods, "equateFullHouse");
-      let flushSpy = sinon.spy(equatorMethods, "equateFlush");
-      let straightSpy = sinon.spy(equatorMethods, "equateStraight");
-      let tripsSpy = sinon.spy(equatorMethods, "equateTrips");
-      let twoPairSpy = sinon.spy(equatorMethods, "equateTwoPair");
-      let pairSpy = sinon.spy(equatorMethods, "equatePair");
-      let highCardSpy = sinon.spy(equatorMethods, "equateHighCard");
+      let royalFlushSpy = sinon.spy(equators, "equateRoyalFlush");
+      let straightFlushSpy = sinon.spy(equators, "equateStraightFlush");
+      let fourOfAKindSpy = sinon.spy(equators, "equateFourOfAKind");
+      let fullHouseSpy = sinon.spy(equators, "equateFullHouse");
+      let flushSpy = sinon.spy(equators, "equateFlush");
+      let straightSpy = sinon.spy(equators, "equateStraight");
+      let tripsSpy = sinon.spy(equators, "equateTrips");
+      let twoPairSpy = sinon.spy(equators, "equateTwoPair");
+      let pairSpy = sinon.spy(equators, "equatePair");
+      let highCardSpy = sinon.spy(equators, "equateHighCard");
 
-      hand.setRiver(river)
-      hand.evaluateHandPossibilities();
-      sinon.restore()
+      hand.setRiver(river);
+      hand.evaluateHandOutcomes();
+      sinon.restore();
       
       assert.equal(hand.highestHand, 'High Card', 'the highest hand is a High Card');
       assert.equal(hand.handValue, 1, 'the hand value is 1');

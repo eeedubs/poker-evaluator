@@ -1,7 +1,7 @@
 const { assert } = require('chai');
-const { getHighestCardsWithExclusion, sortPokerHand } = require('./helpers/index');
+const { getHighestCardsWithExclusion, sortHighToLow } = require('../helpers/index');
 const { Card, Hand, Deck } = require('../index');
-const equateTwoPair = require('./twoPair');
+const equateTwoPair = require('./equateTwoPair');
 
 describe('#twoPair()', () => {
   describe('it is a Two Pair', () => {
@@ -22,7 +22,7 @@ describe('#twoPair()', () => {
       const deck = new Deck();
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
-      const pokerHand = sortPokerHand(unsortedPokerHand);
+      const pokerHand = sortHighToLow(unsortedPokerHand);
       
       let result = equateTwoPair(hand);
       assert.isNotNull(result);
@@ -47,7 +47,7 @@ describe('#twoPair()', () => {
       const deck = new Deck();
       const hand = new Hand(deck);
       hand.combo = unsortedPokerHand.concat(discardCards);
-      const pokerHand = sortPokerHand(unsortedPokerHand);
+      const pokerHand = sortHighToLow(unsortedPokerHand);
       
       let result = equateTwoPair(hand);
       assert.isNotNull(result);
