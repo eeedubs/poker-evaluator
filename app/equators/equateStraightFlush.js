@@ -1,4 +1,3 @@
-const { getStraightHighCard, getFlushSuite, sortHighToLow }  = require('../helpers/index');
 const equateStraight                          = require('./equateStraight.js');
 const equateFlush                             = require('./equateFlush.js');
 

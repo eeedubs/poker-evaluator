@@ -1,4 +1,4 @@
-const { getHighestCardsWithExclusion, sortHighToLow } = require('../helpers/index');
+const { sortHighToLow } = require('../helpers/index');
 
 module.exports = ((hand) => {
   if (!hand.combo){ return { highestHand: null, pokerHand: null } };

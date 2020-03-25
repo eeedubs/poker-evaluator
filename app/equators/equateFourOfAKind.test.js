@@ -1,5 +1,5 @@
 const { assert } = require('chai');
-const { getHighestCardsWithExclusion, sortHighToLow } = require('../helpers/index');
+const { sortHighToLow } = require('../helpers/index');
 const { Card, Hand, Deck } = require('../index');
 const equateFourOfAKind = require('./equateFourOfAKind');
 

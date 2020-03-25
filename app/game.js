@@ -53,8 +53,6 @@ module.exports = class Game {
 
   determineWinner(){
     let possibleWinners   = [];
-    let winners           = [];
-    let losers            = [];
     let highestHandValue  = -1;
     // Gather the possible winners by hand strength
     this.hands.forEach((hand) => {
@@ -66,15 +64,11 @@ module.exports = class Game {
       }
     });
 
-    if (possibleWinners.length > 1){
-      let pokerHandType = possibleWinners[0].highestHand;
-      winners = comparePickFive(possibleWinners);
-      losers = this.hands.filter(h => !winners.includes(h));
-    } else {
-      let winnerIndex = this.hands.indexOf(possibleWinners[0]);
-      winners = possibleWinners;
-      losers = this.hands.filter((h, index) => { return index !== winnerIndex });
-    }
+    let winners = comparePickFive(possibleWinners);
+    let losers = this.hands.filter(h => !winners.includes(h))
+
+    console.log("RIVER:");
+    console.log(this.river.cards);
 
     console.log("WINNERS:");
     winners.forEach((winner) => {

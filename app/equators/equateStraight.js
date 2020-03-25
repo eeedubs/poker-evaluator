@@ -1,10 +1,9 @@
-const { getFiveHighestCardsFromStraight, sortHighToLow } = require('../helpers/index');
+const { filterStraightDuplicates } = require('../helpers/index');
 
 module.exports = ((hand) => {
   if (!hand.combo){ return { highestHand: null, pokerHand: null } };
   
-  let pokerHand                 = [];
-  let allPossibleStraightCards  = [];
+  let pokerHand = []; allPossibleStraightCards = [];
   let isAceHighStraight         = [1, 10, 11, 12, 13].every(val => hand.comboNumbers.includes(val));
   // ace high straight
   if (isAceHighStraight){
@@ -29,8 +28,7 @@ module.exports = ((hand) => {
   }
 
   if (allPossibleStraightCards.length >= 5){
-    let unsortedCards = getFiveHighestCardsFromStraight(allPossibleStraightCards);
-    pokerHand         = sortHighToLow(unsortedCards);
+    pokerHand = filterStraightDuplicates(allPossibleStraightCards);
     return { highestHand: 'Straight', pokerHand: pokerHand };
   }
 

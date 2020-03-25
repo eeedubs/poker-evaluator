@@ -3,7 +3,7 @@ const sinon                 = require('sinon');
 const assert                = chai.assert
 const expect                = chai.expect
 const { Card, Hand, Deck }  = require('../index');
-const { comparePickFive }   = require('./index');
+const comparePickFive       = require('./comparePickFive');
 
 describe('#comparePickFive()', () => {
   describe('sorted flush', () => {

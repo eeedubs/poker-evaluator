@@ -1,4 +1,3 @@
-const { getStraightHighCard, getFlushSuite, sortHighToLow } = require('../helpers/index');
 const equateStraightFlush = require('./equateStraightFlush');
 
 module.exports = ((hand) => {

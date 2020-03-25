@@ -30,13 +30,11 @@ module.exports = class Hand {
   }
 
   get highCardNumberValue() {
-    return (this.comboNumbers[0] === 1) ? 1 : this.comboNumbers[6]
+    return helperMethods.sortHighToLow(this.combo)[0].number;
   }
 
   get highCardSuiteValue() {
-    let highCardNumberValue = this.highCardNumberValue;
-    let highCards = this.combo.filter((card) => { return card.number === highCardNumberValue });
-    return helperMethods.getHighestCardAmongstDuplicateNumbers(highCards, 1)[0].suite
+    return helperMethods.sortHighToLow(this.combo)[0].suite;
   }
 
   get pokerHandStrength() {
