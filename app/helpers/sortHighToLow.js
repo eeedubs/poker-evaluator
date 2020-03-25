@@ -1,6 +1,9 @@
+const fs = require('fs');
+const sequences = fs.readFileSync('app/assets/sequences.txt', 'utf8')
+const suiteValues = JSON.parse(sequences)["suites"];
+const numberValues = JSON.parse(sequences)["numbers"];
+
 module.exports = ((cards) => {
-  const suiteValues = ['Diamonds', 'Clubs', 'Hearts', 'Spades'];
-  const numberValues = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1];
   return cards.sort((a, b) => {
     if (numberValues.indexOf(a.number) < numberValues.indexOf(b.number)){
       return 1;

@@ -1,14 +1,17 @@
+const fs = require('fs');
+const sequences = fs.readFileSync('app/assets/sequences.txt', 'utf8')
+const suiteValues = JSON.parse(sequences)["suites"];
+const numberValues = JSON.parse(sequences)["numbers"];
+
 module.exports = class Card {
   constructor(number = null, suite = null) {
-    const isValidNumber = (typeof number === 'number' && (number.toFixed() >= 1 && number.toFixed() <= 13))
-    const isValidSuite = (typeof suite === 'string' && ['Diamonds', 'Clubs', 'Hearts', 'Spades'].includes(suite))
-    if (isValidNumber && isValidSuite){
+    if (numberValues.includes(number) && suiteValues.includes(suite)){
       this.number = number;
       this.suite = suite;
-      return
+    } else {
+      this.number = null;
+      this.suite = null;
     }
-    this.number = null;
-    this.suite = null;
   }
   
   drawRandom(deck) {

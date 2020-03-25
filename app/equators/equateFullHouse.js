@@ -1,9 +1,12 @@
+const fs = require('fs');
+const sequences = fs.readFileSync('app/assets/sequences.txt', 'utf8')
+const numberValues = JSON.parse(sequences)["numbers"];
+
 const { sortHighToLow } = require('../helpers/index');
 
 module.exports = ((hand) => {
   if (!hand.combo){ return { highestHand: null, pokerHand: null } };
   
-  let numberSequence = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1];
   let pokerHand = [], pairNumbers = [], tripNumbers = [];
   for (let cardNumber of hand.comboNumbers){
     let occurrences = hand.combo.filter(card => card.number === cardNumber).length;
@@ -19,7 +22,7 @@ module.exports = ((hand) => {
 
   //  2 trips
   if (tripNumbers.length === 2){
-    let higherTripNumber        = (numberSequence.indexOf(tripNumbers[0]) > numberSequence.indexOf(tripNumbers[1])) ?
+    let higherTripNumber        = (numberValues.indexOf(tripNumbers[0]) > numberValues.indexOf(tripNumbers[1])) ?
       tripNumbers[0] : tripNumbers[1];
     let lowerTripNumber         = (higherTripNumber === tripNumbers[0]) ? tripNumbers[1] : tripNumbers[0];
     let higherTripCards         = hand.combo.filter((card) => { return card.number === higherTripNumber });
@@ -34,7 +37,7 @@ module.exports = ((hand) => {
     
     if (pairNumbers.length === 2){
       //  1 trips with 2 pairs 
-      let higherPairNumber  = (numberSequence.indexOf(pairNumbers[0]) > numberSequence.indexOf(pairNumbers[1])) ?
+      let higherPairNumber  = (numberValues.indexOf(pairNumbers[0]) > numberValues.indexOf(pairNumbers[1])) ?
         pairNumbers[0] : pairNumbers[1]
       pairCards             = hand.combo.filter(card => card.number === higherPairNumber);
     } else {

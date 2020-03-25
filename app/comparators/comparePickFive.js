@@ -1,5 +1,8 @@
+const fs = require('fs');
+const sequences = fs.readFileSync('app/assets/sequences.txt', 'utf8')
+const numberValues = JSON.parse(sequences)["numbers"];
+
 module.exports = ((hands) => {
-  const numberValues = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 1];
   let winners = [];
   // Loop through each of the 5 cards
   for (let i = 0; i < 5; i++){
