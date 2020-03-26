@@ -6,7 +6,7 @@ const expect      = chai.expect
 const { Hand, Deck, Card } = require('./index');
 const equators             = require('./equators/index');
 
-describe('#hand()', () => {
+describe('#Hand()', () => {
   it('it creates a hand with 2 cards and a deck', () => {
     let deck = new Deck()
     let hand = new Hand(deck);

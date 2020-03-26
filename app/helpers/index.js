@@ -1,9 +1,9 @@
 const getHighestCardsWithExclusion          = require('./getHighestCardsWithExclusion');
-const filterStraightDuplicates              = require('./filterStraightDuplicates');
+const filterDuplicateCardNumbers              = require('./filterDuplicateCardNumbers');
 const sortHighToLow                         = require('./sortHighToLow');
 
 module.exports = {
   getHighestCardsWithExclusion,
-  filterStraightDuplicates,
+  filterDuplicateCardNumbers,
   sortHighToLow,
 }

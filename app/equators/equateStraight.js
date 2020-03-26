@@ -1,4 +1,4 @@
-const { filterStraightDuplicates } = require('../helpers/index');
+const { filterDuplicateCardNumbers } = require('../helpers/index');
 
 module.exports = ((hand) => {
   if (!hand.combo){ return { highestHand: null, pokerHand: null } };
@@ -28,7 +28,7 @@ module.exports = ((hand) => {
   }
 
   if (allPossibleStraightCards.length >= 5){
-    pokerHand = filterStraightDuplicates(allPossibleStraightCards);
+    pokerHand = filterDuplicateCardNumbers(allPossibleStraightCards);
     return { highestHand: 'Straight', pokerHand: pokerHand };
   }
 

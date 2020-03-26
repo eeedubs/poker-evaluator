@@ -5,20 +5,30 @@ const Card            = require('./card');
 const comparePickFive = require('./comparators/comparePickFive');
 
 module.exports = class Game {
-  constructor(numberOfPlayers) {
+  constructor(numberOfPlayers = 2, isATest = true) {
     this.deck = new Deck();
     this.hands = new Array(numberOfPlayers);
+    this.isATest = isATest;
   }
 
   play(){
+    if (this.hands.length > 22){ 
+      console.log("You cannot play with more than 22 players.");
+      return;
+    } else if (this.hands.length < 1){
+      console.log("You must play with at least 1 player.");
+      return;
+    }
+
     this._deal();
-    this.determineWinner();
+    this._determineWinner();
+    this._printResult();
   }
 
   _deal(){
     this._dealCardsToEachPlayer();
     this._dealRiver();
-    this._evaluateOutcomes();
+    this._evaluateHandOutcomes();
   }
 
   _dealCardsToEachPlayer(){
@@ -45,13 +55,13 @@ module.exports = class Game {
     }
   }
 
-  _evaluateOutcomes(){
+  _evaluateHandOutcomes(){
     this.hands.forEach((hand) => {
       hand.evaluateHandOutcomes();
     });
   }
 
-  determineWinner(){
+  _determineWinner(){
     let possibleWinners   = [];
     let highestHandValue  = -1;
     // Gather the possible winners by hand strength
@@ -64,20 +74,29 @@ module.exports = class Game {
       }
     });
 
-    let winners = comparePickFive(possibleWinners);
-    let losers = this.hands.filter(h => !winners.includes(h))
+    this.winners  = comparePickFive(possibleWinners);
+    this.losers   = this.hands.filter(h => !this.winners.includes(h))
 
-    console.log("RIVER:");
-    console.log(this.river.cards);
-
-    console.log("WINNERS:");
-    winners.forEach((winner) => {
-      console.log(winner.bestFiveCards, winner.highestHand);
-    });
-    console.log();
-    console.log("LOSERS:");
-    losers.forEach((loser) => {
-      console.log(loser.bestFiveCards, loser.highestHand);
-    });
   }
+  
+  _printResult(){
+    if (this.isATest){ return };
+    if (!this.winners && !this.losers){
+      console.log("No winners or losers found");
+      return;
+    }
+
+    let straightLine = `\n------------------------------------------------\n`;
+    console.log(straightLine, `\nRIVER:\n\n`, this.river.cards, '\n', straightLine, `\nWINNERS:\n`)
+    for (let winner of this.winners){
+      console.log(winner.bestFiveCards, winner.highestHand);
+      console.log()
+    }
+    console.log(straightLine, `\nLOSERS:\n`)
+    for (let loser of this.losers){
+      console.log(loser.bestFiveCards, loser.highestHand);
+      console.log()
+    }
+    console.log(straightLine);
+  };
 }

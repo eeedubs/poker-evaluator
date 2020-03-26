@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const { Deck, Card } = require('./index');
 
-describe('#deck()', () => {
+describe('#Deck()', () => {
   it('it creates a 52-card deck, comprised of 1-13 numbers for 4 suites', () => {
     const suites = ['Diamonds', 'Clubs', 'Hearts', 'Spades']
     let deck = new Deck()

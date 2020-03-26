@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const { River, Deck, Card } = require('./index');
 
-describe('#river()', () => {
+describe('#River()', () => {
   it('it creates a 5-card river and a 3-card burn pile', () => {
     let deck = new Deck();
     let river = new River(deck);

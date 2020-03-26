@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const { Card, Deck } = require('./index');
 
-describe('#card()', () => {
+describe('#Card()', () => {
   describe('it creates a card', () => {
     it('assigns the number and suite to be null when missing parameters', () => {
       let card = new Card()
